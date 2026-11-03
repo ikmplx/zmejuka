@@ -10,7 +10,9 @@ const pauseButton = document.querySelector("#pause");
 
 const GRID_SIZE = 20;
 const CELL_SIZE = 30;
-const TICK_INTERVAL_MS = 130;
+const INITIAL_TICK_INTERVAL_MS = 1000 / 3;
+const APPLES_PER_SPEED_INCREASE = 3;
+const SPEED_MULTIPLIER = 1.1;
 
 let snake;
 let direction;
@@ -113,6 +115,12 @@ function showOverlay(title, text) {
   submessage.textContent = text;
   overlay.classList.remove("hidden");
 }
+function restartTimer() {
+  clearInterval(timer);
+  const speedLevel = Math.floor(score / APPLES_PER_SPEED_INCREASE);
+  const interval = INITIAL_TICK_INTERVAL_MS / SPEED_MULTIPLIER ** speedLevel;
+  timer = setInterval(advanceGame, interval);
+}
 function startGame() {
   clearInterval(timer);
   reset();
@@ -120,7 +128,7 @@ function startGame() {
   overlay.classList.add("hidden");
   startButton.textContent = "Заново ↗";
   pauseButton.textContent = "Пауза";
-  timer = setInterval(advanceGame, TICK_INTERVAL_MS);
+  restartTimer();
 }
 function finishGame(won = false) {
   clearInterval(timer);
@@ -165,6 +173,9 @@ function advanceGame() {
       finishGame(true);
       return;
     }
+    if (score % APPLES_PER_SPEED_INCREASE === 0) {
+      restartTimer();
+    }
   } else {
     snake.pop();
   }
@@ -185,7 +196,7 @@ function togglePause() {
     state = "playing";
     overlay.classList.add("hidden");
     pauseButton.textContent = "Пауза";
-    timer = setInterval(advanceGame, TICK_INTERVAL_MS);
+    restartTimer();
   }
 }
 startButton.addEventListener("click", startGame);
