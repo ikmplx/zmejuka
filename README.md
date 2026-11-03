@@ -1,0 +1,22 @@
+# Змейка
+
+Небольшая браузерная игра без зависимостей и сборки. Чтобы играть локально, откройте `index.html` в браузере.
+
+Управление: стрелки или WASD, пробел — пауза. На сенсорном экране доступны кнопки под полем. Рекорд хранится в браузере.
+
+## Публикация на GitHub Pages
+
+1. Создайте пустой репозиторий на GitHub и отправьте в него этот проект:
+
+   ```sh
+   git add -A
+   git commit -m "Prepare game for GitHub Pages"
+   git remote add origin https://github.com/USERNAME/REPOSITORY.git
+   git push -u origin main
+   ```
+
+   Замените `USERNAME` и `REPOSITORY` на свои данные. Если Git запросит авторизацию, следуйте его подсказкам.
+2. В репозитории откройте **Settings → Pages**. В разделе **Build and deployment** выберите **Deploy from a branch**, ветку `main` и папку `/ (root)`, затем нажмите **Save**.
+3. После публикации адрес сайта появится в разделе **Settings → Pages**. Обычно это `https://USERNAME.github.io/REPOSITORY/`.
+
+При последующих изменениях достаточно сделать коммит и отправить его в `main`.
