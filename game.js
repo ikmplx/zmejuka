@@ -15,7 +15,7 @@ const SPEED_MULTIPLIER = 1.1;
 
 let snake;
 let direction;
-let nextDirection;
+let directionQueue;
 let food;
 let score = 0;
 let best = 0;
@@ -50,7 +50,7 @@ function reset() {
     { x: 7, y: 10 },
   ];
   direction = { x: 1, y: 0 };
-  nextDirection = direction;
+  directionQueue = [];
   score = 0;
   food = placeFood();
   updateScores();
@@ -137,7 +137,9 @@ function finishGame(won = false) {
   );
 }
 function advanceGame() {
-  direction = nextDirection;
+  if (directionQueue.length > 0) {
+    direction = directionQueue.shift();
+  }
   const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y },
     isEating = food && head.x === food.x && head.y === food.y;
   if (
@@ -180,8 +182,10 @@ function advanceGame() {
 }
 function turn(x, y) {
   if (state !== "playing") return;
-  if (x === -direction.x && y === -direction.y) return;
-  nextDirection = { x, y };
+  const previousDirection = directionQueue.at(-1) ?? direction;
+  if (x === previousDirection.x && y === previousDirection.y) return;
+  if (x === -previousDirection.x && y === -previousDirection.y) return;
+  directionQueue.push({ x, y });
 }
 function togglePause() {
   if (state === "playing") {
