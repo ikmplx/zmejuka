@@ -1,0 +1,255 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap");
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: #e9eee4;
+  color: #172a21;
+  font-family: "DM Sans", sans-serif;
+  min-height: 100vh;
+}
+.shell {
+  max-width: 1200px;
+  margin: auto;
+  padding: 32px 36px;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #c5d0c2;
+  padding-bottom: 21px;
+}
+.brand {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  font-size: 25px;
+}
+.brand span {
+  color: #658d51;
+}
+.tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #728474;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 70px;
+  align-items: center;
+  padding: 65px 0 45px;
+}
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #66876b;
+  font-weight: 700;
+}
+.intro h1 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(60px, 8vw, 110px);
+  letter-spacing: -0.075em;
+  line-height: 0.9;
+  margin: 20px 0 24px;
+}
+.intro h1 span {
+  color: #719a5a;
+}
+.intro p {
+  color: #6a7c6f;
+  line-height: 1.7;
+  max-width: 330px;
+  font-size: 16px;
+}
+.stats {
+  display: flex;
+  gap: 46px;
+  margin: 43px 0;
+}
+.stat small {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 10px;
+  color: #839386;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.stat strong {
+  font:
+    700 34px "Space Grotesk",
+    sans-serif;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+button {
+  font:
+    700 13px "DM Sans",
+    sans-serif;
+  cursor: pointer;
+  border: 0;
+}
+.primary {
+  background: #1d3829;
+  color: #fff;
+  border-radius: 7px;
+  padding: 16px 24px;
+}
+.primary:hover {
+  background: #325640;
+}
+.secondary {
+  background: transparent;
+  color: #516b58;
+  border: 1px solid #b9c9ba;
+  border-radius: 7px;
+  padding: 15px 20px;
+}
+.hint {
+  margin-top: 30px;
+  font-size: 12px;
+  color: #87988a;
+}
+.game-card {
+  background: #182b22;
+  padding: 18px;
+  border-radius: 15px;
+  box-shadow: 0 25px 60px #526c5027;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 3px 15px;
+  color: #a5b8a7;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.live {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  background: #a9d47f;
+  border-radius: 50%;
+}
+.board-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  background: #20392b;
+  border-radius: 7px;
+  overflow: hidden;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #14261caa;
+  color: white;
+  pointer-events: none;
+}
+.overlay.hidden {
+  display: none;
+}
+.overlay strong {
+  display: block;
+  font:
+    700 34px "Space Grotesk",
+    sans-serif;
+  letter-spacing: -0.04em;
+}
+.overlay span {
+  display: block;
+  color: #c3d3bd;
+  font-size: 13px;
+  margin-top: 8px;
+}
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 3px 1px;
+  color: #81998a;
+  font-size: 11px;
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  gap: 5px;
+  justify-content: center;
+  margin: 20px auto 0;
+}
+.controls button {
+  height: 44px;
+  background: #304a37;
+  color: #e8f4df;
+  border-radius: 6px;
+  font-size: 18px;
+  touch-action: manipulation;
+}
+.controls .empty {
+  visibility: hidden;
+}
+footer {
+  border-top: 1px solid #c5d0c2;
+  padding-top: 19px;
+  display: flex;
+  justify-content: space-between;
+  color: #8c9a8e;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+@media (max-width: 760px) {
+  .shell {
+    padding: 24px 20px;
+  }
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 40px 0;
+  }
+  .intro h1 {
+    font-size: 68px;
+  }
+  .intro p {
+    margin-bottom: 0;
+  }
+  .stats {
+    margin: 25px 0;
+  }
+  .game-card {
+    max-width: 560px;
+    width: 100%;
+    margin: auto;
+  }
+  .hint {
+    margin-top: 20px;
+  }
+  .tag {
+    font-size: 9px;
+  }
+  footer {
+    gap: 12px;
+  }
+}

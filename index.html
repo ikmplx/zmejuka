@@ -1,7 +1,79 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101b17"><title>Змейка — маленькая аркада</title><style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap');
-*{box-sizing:border-box}body{margin:0;background:#e9eee4;color:#172a21;font-family:'DM Sans',sans-serif;min-height:100vh}.shell{max-width:1200px;margin:auto;padding:32px 36px}header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #c5d0c2;padding-bottom:21px}.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:-.05em;font-size:25px}.brand span{color:#658d51}.tag{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#728474}.layout{display:grid;grid-template-columns:1fr 1.15fr;gap:70px;align-items:center;padding:65px 0 45px}.eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#66876b;font-weight:700}.intro h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(60px,8vw,110px);letter-spacing:-.075em;line-height:.9;margin:20px 0 24px}.intro h1 span{color:#719a5a}.intro p{color:#6a7c6f;line-height:1.7;max-width:330px;font-size:16px}.stats{display:flex;gap:46px;margin:43px 0}.stat small{display:block;text-transform:uppercase;letter-spacing:.13em;font-size:10px;color:#839386;font-weight:700;margin-bottom:7px}.stat strong{font:700 34px 'Space Grotesk',sans-serif}.actions{display:flex;gap:10px;flex-wrap:wrap}button{font:700 13px 'DM Sans',sans-serif;cursor:pointer;border:0}.primary{background:#1d3829;color:#fff;border-radius:7px;padding:16px 24px}.primary:hover{background:#325640}.secondary{background:transparent;color:#516b58;border:1px solid #b9c9ba;border-radius:7px;padding:15px 20px}.hint{margin-top:30px;font-size:12px;color:#87988a}.game-card{background:#182b22;padding:18px;border-radius:15px;box-shadow:0 25px 60px #526c5027}.card-head{display:flex;justify-content:space-between;align-items:center;padding:2px 3px 15px;color:#a5b8a7;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.live{display:flex;gap:7px;align-items:center}.dot{width:7px;height:7px;background:#a9d47f;border-radius:50%}.board-wrap{position:relative;aspect-ratio:1;background:#20392b;border-radius:7px;overflow:hidden}canvas{display:block;width:100%;height:100%}.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;background:#14261caa;color:white;pointer-events:none}.overlay.hidden{display:none}.overlay strong{display:block;font:700 34px 'Space Grotesk',sans-serif;letter-spacing:-.04em}.overlay span{display:block;color:#c3d3bd;font-size:13px;margin-top:8px}.card-foot{display:flex;justify-content:space-between;padding:15px 3px 1px;color:#81998a;font-size:11px}.controls{display:grid;grid-template-columns:repeat(3,48px);gap:5px;justify-content:center;margin:20px auto 0}.controls button{height:44px;background:#304a37;color:#e8f4df;border-radius:6px;font-size:18px;touch-action:manipulation}.controls .empty{visibility:hidden}footer{border-top:1px solid #c5d0c2;padding-top:19px;display:flex;justify-content:space-between;color:#8c9a8e;font-size:11px;letter-spacing:.04em}@media(max-width:760px){.shell{padding:24px 20px}.layout{grid-template-columns:1fr;gap:30px;padding:40px 0}.intro h1{font-size:68px}.intro p{margin-bottom:0}.stats{margin:25px 0}.game-card{max-width:560px;width:100%;margin:auto}.hint{margin-top:20px}.tag{font-size:9px}footer{gap:12px}}
-</style></head><body><main class="shell"><header><div class="brand">змейка<span>.</span></div><div class="tag">Маленькая аркада / № 01</div></header><section class="layout"><div class="intro"><div class="eyebrow">✳ &nbsp; Классика, которая всегда с тобой</div><h1>Ешь. Расти.<br><span>Повтори.</span></h1><p>Немного ностальгии и одно простое правило: не врезайся. Сколько очков получится набрать?</p><div class="stats"><div class="stat"><small>Счёт</small><strong id="score">00</strong></div><div class="stat"><small>Рекорд</small><strong id="best">00</strong></div></div><div class="actions"><button class="primary" id="start">Начать игру ↗</button><button class="secondary" id="pause">Пауза</button></div><div class="hint">↑ ↓ ← → или WASD для движения · Пробел для паузы</div></div><div class="game-card"><div class="card-head"><span class="live"><i class="dot"></i> Игровое поле</span><span>20 × 20</span></div><div class="board-wrap"><canvas id="board" width="600" height="600" aria-label="Игровое поле змейки"></canvas><div class="overlay" id="overlay"><div><strong id="message">Готов играть?</strong><span id="submessage">Нажми «Начать игру»</span></div></div></div><div class="card-foot"><span>Собирай яблоки, чтобы расти</span><span>✳ Удачи!</span></div><div class="controls" aria-label="Управление"><button class="empty" tabindex="-1"></button><button data-dir="up" aria-label="Вверх">↑</button><button class="empty" tabindex="-1"></button><button data-dir="left" aria-label="Влево">←</button><button data-dir="down" aria-label="Вниз">↓</button><button data-dir="right" aria-label="Вправо">→</button></div></div></section><footer><span>СДЕЛАНО ДЛЯ МАЛЕНЬКОЙ ПЕРЕДЫШКИ</span><span>ИГРАЙ В СВОЁМ ТЕМПЕ ✳</span></footer></main><script>
-const canvas=document.querySelector('#board'),ctx=canvas.getContext('2d'),scoreEl=document.querySelector('#score'),bestEl=document.querySelector('#best'),overlay=document.querySelector('#overlay'),message=document.querySelector('#message'),sub=document.querySelector('#submessage'),start=document.querySelector('#start'),pause=document.querySelector('#pause');const N=20,S=30;let snake,dir,next,food,score=0,best=0,state='ready',timer;try{best=Number(localStorage.getItem('snake-best'))||0}catch(e){}function updateScores(){scoreEl.textContent=String(score).padStart(2,'0');bestEl.textContent=String(best).padStart(2,'0')}function placeFood(){let free=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!snake.some(p=>p.x===x&&p.y===y))free.push({x,y});return free.length?free[Math.floor(Math.random()*free.length)]:null}function reset(){snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}];dir={x:1,y:0};next=dir;score=0;food=placeFood();updateScores();draw()}function draw(){ctx.fillStyle='#20392b';ctx.fillRect(0,0,600,600);ctx.strokeStyle='#294434';ctx.lineWidth=1;for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*S,0);ctx.lineTo(i*S,600);ctx.moveTo(0,i*S);ctx.lineTo(600,i*S);ctx.stroke()}if(food){ctx.fillStyle='#f4b978';ctx.beginPath();ctx.arc(food.x*S+15,food.y*S+15,10,0,Math.PI*2);ctx.fill();ctx.fillStyle='#9acb79';ctx.fillRect(food.x*S+15,food.y*S+2,4,6)}snake.forEach((p,i)=>{ctx.fillStyle=i?'#9bcf78':'#c2e79e';ctx.beginPath();ctx.roundRect(p.x*S+2,p.y*S+2,26,26,7);ctx.fill();if(!i){ctx.fillStyle='#24422b';ctx.beginPath();ctx.arc(p.x*S+15+dir.x*6+(dir.y?5:0),p.y*S+15+dir.y*6+(dir.x?5:0),2,0,7);ctx.arc(p.x*S+15+dir.x*6-(dir.y?5:0),p.y*S+15+dir.y*6-(dir.x?5:0),2,0,7);ctx.fill()}})}function show(title,text){message.textContent=title;sub.textContent=text;overlay.classList.remove('hidden')}function begin(){clearInterval(timer);reset();state='playing';overlay.classList.add('hidden');start.textContent='Заново ↗';pause.textContent='Пауза';timer=setInterval(tick,130)}function finish(won=false){clearInterval(timer);state='over';show(won?'Победа!':'Игра окончена',won?'Ты заполнил всё поле!':'Попробуй ещё раз — у тебя получится');start.textContent='Играть снова ↗'}function tick(){dir=next;const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y},eating=food&&head.x===food.x&&head.y===food.y;if(head.x<0||head.y<0||head.x>=N||head.y>=N||snake.slice(0,eating?undefined:-1).some(p=>p.x===head.x&&p.y===head.y)){finish();return}snake.unshift(head);if(eating){score++;if(score>best){best=score;try{localStorage.setItem('snake-best',best)}catch(e){}}updateScores();food=placeFood();if(!food){draw();finish(true);return}}else snake.pop();draw()}function turn(x,y){if(state!=='playing')return;if(x===-dir.x&&y===-dir.y)return;next={x,y}}function toggle(){if(state==='playing'){clearInterval(timer);state='paused';show('Пауза','Передохни немного');pause.textContent='Продолжить'}else if(state==='paused'){state='playing';overlay.classList.add('hidden');pause.textContent='Пауза';timer=setInterval(tick,130)}}start.addEventListener('click',begin);pause.addEventListener('click',toggle);const keys={ArrowUp:[0,-1],w:[0,-1],ц:[0,-1],ArrowDown:[0,1],s:[0,1],ы:[0,1],ArrowLeft:[-1,0],a:[-1,0],ф:[-1,0],ArrowRight:[1,0],d:[1,0],в:[1,0]};document.addEventListener('keydown',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;if(keys[k]){e.preventDefault();turn(...keys[k])}else if(e.code==='Space'){e.preventDefault();toggle()}});document.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>{const d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[b.dataset.dir];turn(...d)}));reset();
-</script></body></html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101b17" />
+    <title>Змейка — маленькая аркада</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <div class="brand">змейка<span>.</span></div>
+        <div class="tag">Маленькая аркада / № 01</div>
+      </header>
+      <section class="layout">
+        <div class="intro">
+          <div class="eyebrow">✳ &nbsp; Классика, которая всегда с тобой</div>
+          <h1>Ешь. Расти.<br /><span>Повтори.</span></h1>
+          <p>
+            Немного ностальгии и одно простое правило: не врезайся. Сколько
+            очков получится набрать?
+          </p>
+          <div class="stats">
+            <div class="stat">
+              <small>Счёт</small><strong id="score">00</strong>
+            </div>
+            <div class="stat">
+              <small>Рекорд</small><strong id="best">00</strong>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="start">Начать игру ↗</button
+            ><button class="secondary" id="pause">Пауза</button>
+          </div>
+          <div class="hint">
+            ↑ ↓ ← → или WASD для движения · Пробел для паузы
+          </div>
+        </div>
+        <div class="game-card">
+          <div class="card-head">
+            <span class="live"><i class="dot"></i> Игровое поле</span
+            ><span>20 × 20</span>
+          </div>
+          <div class="board-wrap">
+            <canvas
+              id="board"
+              width="600"
+              height="600"
+              aria-label="Игровое поле змейки"
+            ></canvas>
+            <div class="overlay" id="overlay">
+              <div>
+                <strong id="message">Готов играть?</strong
+                ><span id="submessage">Нажми «Начать игру»</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-foot">
+            <span>Собирай яблоки, чтобы расти</span><span>✳ Удачи!</span>
+          </div>
+          <div class="controls" aria-label="Управление">
+            <button class="empty" tabindex="-1"></button
+            ><button data-dir="up" aria-label="Вверх">↑</button
+            ><button class="empty" tabindex="-1"></button
+            ><button data-dir="left" aria-label="Влево">←</button
+            ><button data-dir="down" aria-label="Вниз">↓</button
+            ><button data-dir="right" aria-label="Вправо">→</button>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <span>СДЕЛАНО ДЛЯ МАЛЕНЬКОЙ ПЕРЕДЫШКИ</span
+        ><span>ИГРАЙ В СВОЁМ ТЕМПЕ ✳</span>
+      </footer>
+    </main>
+    <script src="game.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,217 @@
+const canvas = document.querySelector("#board");
+const context = canvas.getContext("2d");
+const scoreElement = document.querySelector("#score");
+const bestElement = document.querySelector("#best");
+const overlay = document.querySelector("#overlay");
+const message = document.querySelector("#message");
+const submessage = document.querySelector("#submessage");
+const startButton = document.querySelector("#start");
+const pauseButton = document.querySelector("#pause");
+
+const GRID_SIZE = 20;
+const CELL_SIZE = 30;
+const TICK_INTERVAL_MS = 130;
+
+let snake;
+let direction;
+let nextDirection;
+let food;
+let score = 0;
+let best = 0;
+let state = "ready";
+let timer;
+try {
+  best = Number(localStorage.getItem("snake-best")) || 0;
+} catch {
+  // The game remains playable if browser storage is unavailable.
+}
+function updateScores() {
+  scoreElement.textContent = String(score).padStart(2, "0");
+  bestElement.textContent = String(best).padStart(2, "0");
+}
+function placeFood() {
+  const freeCells = [];
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      if (!snake.some((segment) => segment.x === x && segment.y === y)) {
+        freeCells.push({ x, y });
+      }
+    }
+  }
+  return freeCells.length ? freeCells[Math.floor(Math.random() * freeCells.length)] : null;
+}
+function reset() {
+  snake = [
+    { x: 9, y: 10 },
+    { x: 8, y: 10 },
+    { x: 7, y: 10 },
+  ];
+  direction = { x: 1, y: 0 };
+  nextDirection = direction;
+  score = 0;
+  food = placeFood();
+  updateScores();
+  draw();
+}
+function draw() {
+  context.fillStyle = "#20392b";
+  context.fillRect(0, 0, 600, 600);
+  context.strokeStyle = "#294434";
+  context.lineWidth = 1;
+  for (let i = 0; i <= GRID_SIZE; i++) {
+    context.beginPath();
+    context.moveTo(i * CELL_SIZE, 0);
+    context.lineTo(i * CELL_SIZE, 600);
+    context.moveTo(0, i * CELL_SIZE);
+    context.lineTo(600, i * CELL_SIZE);
+    context.stroke();
+  }
+  if (food) {
+    context.fillStyle = "#f4b978";
+    context.beginPath();
+    context.arc(food.x * CELL_SIZE + 15, food.y * CELL_SIZE + 15, 10, 0, Math.PI * 2);
+    context.fill();
+    context.fillStyle = "#9acb79";
+    context.fillRect(food.x * CELL_SIZE + 15, food.y * CELL_SIZE + 2, 4, 6);
+  }
+  snake.forEach((p, i) => {
+    context.fillStyle = i ? "#9bcf78" : "#c2e79e";
+    context.beginPath();
+    context.roundRect(p.x * CELL_SIZE + 2, p.y * CELL_SIZE + 2, 26, 26, 7);
+    context.fill();
+    if (!i) {
+      context.fillStyle = "#24422b";
+      context.beginPath();
+      context.arc(
+        p.x * CELL_SIZE + 15 + direction.x * 6 + (direction.y ? 5 : 0),
+        p.y * CELL_SIZE + 15 + direction.y * 6 + (direction.x ? 5 : 0),
+        2,
+        0,
+        7,
+      );
+      context.arc(
+        p.x * CELL_SIZE + 15 + direction.x * 6 - (direction.y ? 5 : 0),
+        p.y * CELL_SIZE + 15 + direction.y * 6 - (direction.x ? 5 : 0),
+        2,
+        0,
+        7,
+      );
+      context.fill();
+    }
+  });
+}
+function showOverlay(title, text) {
+  message.textContent = title;
+  submessage.textContent = text;
+  overlay.classList.remove("hidden");
+}
+function startGame() {
+  clearInterval(timer);
+  reset();
+  state = "playing";
+  overlay.classList.add("hidden");
+  startButton.textContent = "Заново ↗";
+  pauseButton.textContent = "Пауза";
+  timer = setInterval(advanceGame, TICK_INTERVAL_MS);
+}
+function finishGame(won = false) {
+  clearInterval(timer);
+  state = "over";
+  showOverlay(
+    won ? "Победа!" : "Игра окончена",
+    won ? "Ты заполнил всё поле!" : "Попробуй ещё раз — у тебя получится",
+  );
+  startButton.textContent = "Играть снова ↗";
+}
+function advanceGame() {
+  direction = nextDirection;
+  const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y },
+    isEating = food && head.x === food.x && head.y === food.y;
+  if (
+    head.x < 0 ||
+    head.y < 0 ||
+    head.x >= GRID_SIZE ||
+    head.y >= GRID_SIZE ||
+    snake
+      .slice(0, isEating ? undefined : -1)
+      .some((p) => p.x === head.x && p.y === head.y)
+  ) {
+    finishGame();
+    return;
+  }
+  snake.unshift(head);
+  if (isEating) {
+    score++;
+    if (score > best) {
+      best = score;
+      try {
+        localStorage.setItem("snake-best", best);
+      } catch {
+        // Keep the record in memory for the current session.
+      }
+    }
+    updateScores();
+    food = placeFood();
+    if (!food) {
+      draw();
+      finishGame(true);
+      return;
+    }
+  } else {
+    snake.pop();
+  }
+  draw();
+}
+function turn(x, y) {
+  if (state !== "playing") return;
+  if (x === -direction.x && y === -direction.y) return;
+  nextDirection = { x, y };
+}
+function togglePause() {
+  if (state === "playing") {
+    clearInterval(timer);
+    state = "paused";
+    showOverlay("Пауза", "Передохни немного");
+    pauseButton.textContent = "Продолжить";
+  } else if (state === "paused") {
+    state = "playing";
+    overlay.classList.add("hidden");
+    pauseButton.textContent = "Пауза";
+    timer = setInterval(advanceGame, TICK_INTERVAL_MS);
+  }
+}
+startButton.addEventListener("click", startGame);
+pauseButton.addEventListener("click", togglePause);
+const keyDirections = {
+  ArrowUp: [0, -1],
+  w: [0, -1],
+  ц: [0, -1],
+  ArrowDown: [0, 1],
+  s: [0, 1],
+  ы: [0, 1],
+  ArrowLeft: [-1, 0],
+  a: [-1, 0],
+  ф: [-1, 0],
+  ArrowRight: [1, 0],
+  d: [1, 0],
+  в: [1, 0],
+};
+document.addEventListener("keydown", (e) => {
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  if (keyDirections[k]) {
+    e.preventDefault();
+    turn(...keyDirections[k]);
+  } else if (e.code === "Space") {
+    e.preventDefault();
+    togglePause();
+  }
+});
+document.querySelectorAll("[data-dir]").forEach((b) =>
+  b.addEventListener("click", () => {
+    const d = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[
+      b.dataset.dir
+    ];
+    turn(...d);
+  }),
+);
+reset();
