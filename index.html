@@ -2,78 +2,61 @@
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
     <meta name="theme-color" content="#101b17" />
     <title>Змейка — маленькая аркада</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="game.js" defer></script>
   </head>
   <body>
     <main class="shell">
-      <header>
-        <div class="brand">змейка<span>.</span></div>
-        <div class="tag">Маленькая аркада / № 01</div>
-      </header>
-      <section class="layout">
-        <div class="intro">
-          <div class="eyebrow">✳ &nbsp; Классика, которая всегда с тобой</div>
-          <h1>Ешь. Расти.<br /><span>Повтори.</span></h1>
-          <p>
-            Немного ностальгии и одно простое правило: не врезайся. Сколько
-            очков получится набрать?
-          </p>
-          <div class="stats">
-            <div class="stat">
-              <small>Счёт</small><strong id="score">00</strong>
-            </div>
-            <div class="stat">
-              <small>Рекорд</small><strong id="best">00</strong>
-            </div>
+      <section class="game-card" aria-label="Игра Змейка">
+        <div class="card-head">
+          <span class="live"><i class="dot"></i> Игровое поле</span>
+          <span>20 × 20</span>
+        </div>
+        <div class="stats" aria-label="Результаты">
+          <div class="stat">
+            <small>Счёт</small><strong id="score">00</strong>
           </div>
-          <div class="actions">
-            <button class="primary" id="start">Начать игру ↗</button
-            ><button class="secondary" id="pause">Пауза</button>
+          <div class="stat">
+            <small>Рекорд</small><strong id="best">00</strong>
           </div>
-          <div class="hint">
-            ↑ ↓ ← → или WASD для движения · Пробел для паузы
+          <div class="stats-note">Ешь. Расти.<br /><span>Повтори.</span></div>
+        </div>
+        <div class="board-wrap">
+          <canvas
+            id="board"
+            width="600"
+            height="600"
+            aria-label="Игровое поле змейки. Нажмите относительно головы, чтобы повернуть."
+          ></canvas>
+          <div class="overlay" id="overlay">
+            <div>
+              <strong id="message">Готов играть?</strong
+              ><span id="submessage">Нажми «Начать игру»</span>
+            </div>
           </div>
         </div>
-        <div class="game-card">
-          <div class="card-head">
-            <span class="live"><i class="dot"></i> Игровое поле</span
-            ><span>20 × 20</span>
-          </div>
-          <div class="board-wrap">
-            <canvas
-              id="board"
-              width="600"
-              height="600"
-              aria-label="Игровое поле змейки"
-            ></canvas>
-            <div class="overlay" id="overlay">
-              <div>
-                <strong id="message">Готов играть?</strong
-                ><span id="submessage">Нажми «Начать игру»</span>
-              </div>
-            </div>
-          </div>
-          <div class="card-foot">
-            <span>Собирай яблоки, чтобы расти</span><span>✳ Удачи!</span>
-          </div>
-          <div class="controls" aria-label="Управление">
-            <button class="empty" tabindex="-1"></button
-            ><button data-dir="up" aria-label="Вверх">↑</button
-            ><button class="empty" tabindex="-1"></button
-            ><button data-dir="left" aria-label="Влево">←</button
-            ><button data-dir="down" aria-label="Вниз">↓</button
-            ><button data-dir="right" aria-label="Вправо">→</button>
-          </div>
+        <div class="card-foot">
+          <span>Собирай яблоки, чтобы расти</span><span>✳ Удачи!</span>
         </div>
+        <div class="actions">
+          <button class="primary" id="start">Начать игру ↗</button>
+          <button class="secondary" id="pause">Пауза</button>
+        </div>
+        <p class="hint">
+          Коснись поля в направлении движения<br /><span
+            >На клавиатуре: стрелки или WASD · Пробел — пауза</span
+          >
+        </p>
       </section>
       <footer>
-        <span>СДЕЛАНО ДЛЯ МАЛЕНЬКОЙ ПЕРЕДЫШКИ</span
-        ><span>ИГРАЙ В СВОЁМ ТЕМПЕ ✳</span>
+        <span>МАЛЕНЬКАЯ ПЕРЕДЫШКА</span><span>ИГРАЙ В СВОЁМ ТЕМПЕ ✳</span>
       </footer>
     </main>
-    <script src="game.js" defer></script>
   </body>
 </html>

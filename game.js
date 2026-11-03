@@ -38,7 +38,9 @@ function placeFood() {
       }
     }
   }
-  return freeCells.length ? freeCells[Math.floor(Math.random() * freeCells.length)] : null;
+  return freeCells.length
+    ? freeCells[Math.floor(Math.random() * freeCells.length)]
+    : null;
 }
 function reset() {
   snake = [
@@ -69,7 +71,13 @@ function draw() {
   if (food) {
     context.fillStyle = "#f4b978";
     context.beginPath();
-    context.arc(food.x * CELL_SIZE + 15, food.y * CELL_SIZE + 15, 10, 0, Math.PI * 2);
+    context.arc(
+      food.x * CELL_SIZE + 15,
+      food.y * CELL_SIZE + 15,
+      10,
+      0,
+      Math.PI * 2,
+    );
     context.fill();
     context.fillStyle = "#9acb79";
     context.fillRect(food.x * CELL_SIZE + 15, food.y * CELL_SIZE + 2, 4, 6);
@@ -206,12 +214,18 @@ document.addEventListener("keydown", (e) => {
     togglePause();
   }
 });
-document.querySelectorAll("[data-dir]").forEach((b) =>
-  b.addEventListener("click", () => {
-    const d = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[
-      b.dataset.dir
-    ];
-    turn(...d);
-  }),
-);
+canvas.addEventListener("pointerdown", (event) => {
+  const bounds = canvas.getBoundingClientRect();
+  const headX = bounds.left + ((snake[0].x + 0.5) / GRID_SIZE) * bounds.width;
+  const headY = bounds.top + ((snake[0].y + 0.5) / GRID_SIZE) * bounds.height;
+  const deltaX = event.clientX - headX;
+  const deltaY = event.clientY - headY;
+
+  if (deltaX === 0 && deltaY === 0) return;
+  if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    turn(Math.sign(deltaX), 0);
+  } else {
+    turn(0, Math.sign(deltaY));
+  }
+});
 reset();
