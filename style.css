@@ -166,15 +166,8 @@ button {
     sans-serif;
   cursor: pointer;
 }
-.primary {
-  flex: 1;
-  background: #c2e79e;
-  color: #1d3829;
-}
-.primary:hover {
-  background: #d2efb5;
-}
 .secondary {
+  width: 100%;
   background: transparent;
   color: #c3d3bd;
   border: 1px solid #627d68;

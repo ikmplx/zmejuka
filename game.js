@@ -5,7 +5,6 @@ const bestElement = document.querySelector("#best");
 const overlay = document.querySelector("#overlay");
 const message = document.querySelector("#message");
 const submessage = document.querySelector("#submessage");
-const startButton = document.querySelector("#start");
 const pauseButton = document.querySelector("#pause");
 
 const GRID_SIZE = 20;
@@ -126,7 +125,6 @@ function startGame() {
   reset();
   state = "playing";
   overlay.classList.add("hidden");
-  startButton.textContent = "Заново ↗";
   pauseButton.textContent = "Пауза";
   restartTimer();
 }
@@ -135,9 +133,8 @@ function finishGame(won = false) {
   state = "over";
   showOverlay(
     won ? "Победа!" : "Игра окончена",
-    won ? "Ты заполнил всё поле!" : "Попробуй ещё раз — у тебя получится",
+    "Коснись экрана, чтобы играть снова",
   );
-  startButton.textContent = "Играть снова ↗";
 }
 function advanceGame() {
   direction = nextDirection;
@@ -199,7 +196,6 @@ function togglePause() {
     restartTimer();
   }
 }
-startButton.addEventListener("click", startGame);
 pauseButton.addEventListener("click", togglePause);
 const keyDirections = {
   ArrowUp: [0, -1],
@@ -219,10 +215,22 @@ document.addEventListener("keydown", (e) => {
   const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
   if (keyDirections[k]) {
     e.preventDefault();
+    if (state === "ready" || state === "over") {
+      startGame();
+    }
     turn(...keyDirections[k]);
   } else if (e.code === "Space") {
     e.preventDefault();
-    togglePause();
+    if (state === "ready" || state === "over") {
+      startGame();
+    } else {
+      togglePause();
+    }
+  }
+});
+document.addEventListener("pointerdown", (event) => {
+  if ((state === "ready" || state === "over") && !pauseButton.contains(event.target)) {
+    startGame();
   }
 });
 canvas.addEventListener("pointerdown", (event) => {
