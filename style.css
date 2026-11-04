@@ -188,6 +188,14 @@ footer {
   font-size: 9px;
   letter-spacing: 0.04em;
 }
+@media (min-width: 768px) {
+  body {
+    background: radial-gradient(ellipse at 50% 35%, #344e3c 0%, #23382b 100%);
+  }
+  footer {
+    color: #b6c8b8;
+  }
+}
 @media (max-height: 580px) {
   .shell {
     gap: 5px;
