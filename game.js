@@ -244,11 +244,11 @@ canvas.addEventListener("pointerdown", (event) => {
   const deltaX = event.clientX - headX;
   const deltaY = event.clientY - headY;
 
-  if (deltaX === 0 && deltaY === 0) return;
-  if (Math.abs(deltaX) > Math.abs(deltaY)) {
-    turn(Math.sign(deltaX), 0);
-  } else {
+  const previousDirection = directionQueue.at(-1) ?? direction;
+  if (previousDirection.x !== 0 && deltaY !== 0) {
     turn(0, Math.sign(deltaY));
+  } else if (previousDirection.y !== 0 && deltaX !== 0) {
+    turn(Math.sign(deltaX), 0);
   }
 });
 reset();
