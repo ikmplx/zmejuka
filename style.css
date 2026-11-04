@@ -11,7 +11,8 @@ body {
   overflow: hidden;
 }
 body {
-  background: #e9eee4;
+  background: #23382b;
+  background: radial-gradient(ellipse at 50% 35%, #344e3c 0%, #23382b 100%);
   color: #172a21;
   font-family: "DM Sans", sans-serif;
 }
@@ -184,17 +185,9 @@ button {
 }
 footer {
   flex: none;
-  color: #8c9a8e;
+  color: #b6c8b8;
   font-size: 9px;
   letter-spacing: 0.04em;
-}
-@media (min-width: 768px) {
-  body {
-    background: radial-gradient(ellipse at 50% 35%, #344e3c 0%, #23382b 100%);
-  }
-  footer {
-    color: #b6c8b8;
-  }
 }
 @media (max-height: 580px) {
   .shell {
